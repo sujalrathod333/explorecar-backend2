@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const CLIENT_URL = "http://localhost:5173";
+const CLIENT_URL = "https://sujal-explore-car.netlify.app";
 const STRIPE_API_VERSION = "2022-11-15";
 
 const getStripe = () => {
