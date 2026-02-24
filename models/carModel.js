@@ -31,6 +31,7 @@ const carSchema = new Schema({
   dailyRate: { type: Number, required: true },
   status: { type: String, enum: ['available','rented','maintenance'], default: 'available' },
   image: { type: String, default: '' },
+  imagePublicId: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
 
   bookings: { type: [carBookingSubSchema], default: [] },
@@ -45,11 +46,11 @@ carSchema.methods.isAvailableForRange = function(requestedPickup, requestedRetur
   const start = new Date(requestedPickup);
   const end = new Date(requestedReturn);
 
-  if (Number.isNan(start.getTime()) || Number.isNaN(end.getTime())) return false;
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
   if (start > end) return false;
 
-  for (const b of this.bookings) { 
-    if (blockingStatuses.includes(b.status)) continue;
+  for (const b of this.bookings) {
+    if (!blockingStatuses.includes(b.status)) continue;
     const bStart = new Date(b.pickupDate);
     const bEnd = new Date(b.returnDate);
     if (rangeOverlap(start, end, bStart, bEnd)) {
