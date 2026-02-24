@@ -283,11 +283,22 @@ export const getMyBookings = async (req, res, next) => {
                 mileage: carData.mileage || booking.car.mileage,
                 dailyRate: carData.dailyRate || booking.car.dailyRate
               };
+              
+              // Ensure carImage is set from car data if not already present
+              if (!booking.carImage && carData.image) {
+                booking.carImage = carData.image;
+              }
             }
           } catch (error) {
             console.error('Error fetching car data for booking:', booking._id, error);
           }
         }
+        
+        // Ensure carImage is available even if car data wasn't fetched
+        if (!booking.carImage && booking.car?.image) {
+          booking.carImage = booking.car.image;
+        }
+        
         return booking;
       })
     );
